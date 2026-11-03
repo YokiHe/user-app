@@ -2,55 +2,83 @@
   <div class="app-wrapper">
     <!-- ========== 登录页 ========== -->
     <div v-if="!user" class="login-page">
-      <div class="login-card">
-        <div class="login-header">
-          <h2>👤 用户管理系统</h2>
-          <p class="subtitle">第 10 章热身项目</p>
+      <!-- 左侧品牌区 -->
+      <section class="brand-panel">
+        <div class="brand-main">
+          <div class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+
+          <h1 class="brand-title">用户管理系统</h1>
+          <p class="brand-desc">
+            基于 Java Servlet 与 Vue 3 的前后端分离实践项目，涵盖会话鉴权、分页查询与用户数据维护。
+          </p>
+
+          <ul class="brand-list">
+            <li><span class="dot"></span>Session 会话鉴权</li>
+            <li><span class="dot"></span>RESTful 接口设计</li>
+            <li><span class="dot"></span>MySQL 数据持久化</li>
+          </ul>
         </div>
 
-        <el-alert
-          v-if="loginMsg"
-          :title="loginMsg"
-          type="error"
-          show-icon
-          class="mb-16"
-          :closable="false"
-        />
+        <div class="brand-footer">Java Web 课程实训 · 第 10 章</div>
+      </section>
 
-        <el-form @keyup.enter="login">
-          <el-form-item>
-            <el-input
-              v-model="loginForm.username"
-              placeholder="请输入用户名"
+      <!-- 右侧表单区 -->
+      <section class="form-panel">
+        <div class="form-inner">
+          <h2 class="form-title">登录</h2>
+          <p class="form-sub">请输入账号信息以继续</p>
+
+          <el-alert
+            v-if="loginMsg"
+            :title="loginMsg"
+            type="error"
+            show-icon
+            :closable="false"
+            class="login-alert"
+          />
+
+          <el-form class="login-form" @keyup.enter="login">
+            <el-form-item>
+              <label class="field-label">用户名</label>
+              <el-input
+                v-model="loginForm.username"
+                placeholder="请输入用户名"
+                size="large"
+              />
+            </el-form-item>
+
+            <el-form-item>
+              <label class="field-label">密码</label>
+              <el-input
+                v-model="loginForm.password"
+                type="password"
+                placeholder="请输入密码"
+                size="large"
+                show-password
+              />
+            </el-form-item>
+
+            <el-button
+              type="primary"
               size="large"
-              prefix-icon="User"
-            />
-          </el-form-item>
+              class="login-btn"
+              :loading="logging"
+              @click="login"
+            >
+              登 录
+            </el-button>
+          </el-form>
 
-          <el-form-item>
-            <el-input
-              v-model="loginForm.password"
-              type="password"
-              placeholder="请输入密码"
-              size="large"
-              prefix-icon="Lock"
-              show-password
-            />
-          </el-form-item>
-
-          <el-button
-            type="primary"
-            size="large"
-            class="login-btn"
-            :loading="logging"
-            @click="login"
-          >
-            登 录
-          </el-button>
-        </el-form>
-
-        <p class="tip">测试账号：kylin / Kylin@123</p>
-      </div>
+          <p class="form-tip">测试账号：kylin / Kylin@123</p>
+        </div>
+      </section>
     </div>
 
     <!-- ========== 管理页 ========== -->
@@ -58,7 +86,7 @@
       <!-- 顶部导航 -->
       <el-header class="app-header">
         <div class="header-left">
-          <h3>👤 用户管理系统</h3>
+          <h3>用户管理系统</h3>
         </div>
         <div class="header-right">
           <el-tag type="success" effect="dark" class="mr-12">
@@ -334,50 +362,211 @@ onMounted(async () => {
 /* ========== 登录页 ========== */
 .login-page {
   min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  background: #f5f7fb;
+}
+
+/* 左侧品牌区 */
+.brand-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 56px 64px;
+  background: linear-gradient(155deg, #1e2a5a 0%, #2b3f8f 55%, #3a56c4 100%);
+  color: #fff;
+  overflow: hidden;
+}
+
+.brand-panel::after {
+  content: '';
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  right: -190px;
+  top: -170px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 62%);
+  pointer-events: none;
+}
+
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin-bottom: 44px;
 }
 
-.login-card {
-  width: 380px;
-  padding: 40px 32px 32px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  animation: fadeInUp 0.5s ease-out;
+.brand-mark svg {
+  width: 26px;
+  height: 26px;
+  stroke: #fff;
 }
 
-.login-header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.login-header h2 {
-  margin: 0;
-  color: #303133;
-  font-size: 24px;
+.brand-title {
+  margin: 0 0 16px;
+  font-size: 30px;
   font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.subtitle {
-  margin: 8px 0 0;
-  color: #909399;
+.brand-desc {
+  max-width: 390px;
+  margin: 0 0 36px;
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.brand-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.brand-list li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
   font-size: 14px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8fb4ff;
+  box-shadow: 0 0 0 4px rgba(143, 180, 255, 0.16);
+}
+
+.brand-footer {
+  position: relative;
+  font-size: 12.5px;
+  letter-spacing: 0.4px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* 右侧表单区 */
+.form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+}
+
+.form-inner {
+  width: 100%;
+  max-width: 372px;
+  animation: fadeInUp 0.45s ease-out;
+}
+
+.form-title {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.form-sub {
+  margin: 0 0 34px;
+  font-size: 14px;
+  color: #8b95a5;
+}
+
+.login-alert {
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #5b6577;
+}
+
+.login-form :deep(.el-form-item) {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.login-form :deep(.el-form-item__content) {
+  display: block;
+  line-height: normal;
+}
+
+.login-form :deep(.el-input__wrapper) {
+  padding: 4px 14px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px #e3e8f0 inset;
+  background: #fff;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.login-form :deep(.el-input__wrapper:hover) {
+  box-shadow: 0 0 0 1px #c9d3e4 inset;
+}
+
+.login-form :deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1.5px #3a56c4 inset;
+}
+
+.login-form :deep(.el-input__inner) {
+  height: 42px;
+  font-size: 15px;
 }
 
 .login-btn {
   width: 100%;
-  font-size: 16px;
-  letter-spacing: 4px;
+  height: 48px;
+  margin-top: 8px;
+  border-radius: 10px;
+  font-size: 15.5px;
+  letter-spacing: 3px;
+  background: #2b3f8f;
+  border-color: #2b3f8f;
+  box-shadow: 0 12px 24px -12px rgba(43, 63, 143, 0.8);
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
-.tip {
-  margin-top: 16px;
+.login-btn:hover {
+  background: #243673;
+  border-color: #243673;
+}
+
+.login-btn:active {
+  transform: translateY(1px);
+}
+
+.form-tip {
+  margin: 24px 0 0;
   text-align: center;
-  color: #c0c4cc;
-  font-size: 12px;
+  font-size: 12.5px;
+  color: #9aa4b4;
+}
+
+@media (max-width: 900px) {
+  .login-page {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    display: none;
+  }
+
+  .form-panel {
+    padding: 32px 24px;
+  }
 }
 
 /* ========== 管理页 ========== */
