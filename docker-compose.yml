@@ -1,0 +1,49 @@
+# ============================================================
+# 国内单机部署：一条命令起「前端 + 后端 + MySQL」
+# 适用：腾讯云轻量应用服务器 / 阿里云 ECS / 任意 Linux 云主机
+# 用法：
+#   1. 装 Docker：curl -fsSL https://get.docker.com | sh
+#   2. 在本目录执行：docker compose up -d --build
+#   3. 浏览器访问 http://<服务器公网IP>:8080
+# ============================================================
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: user-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Kylin@123}
+      MYSQL_DATABASE: userdb
+      TZ: Asia/Shanghai
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # 首次启动自动导入表结构与初始数据
+      - ./db/userdb.sql:/docker-entrypoint-initdb.d/01-userdb.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user-app
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # 容器内网直连 mysql 服务名，不需要公网暴露数据库
+      DB_URL: jdbc:mysql://mysql:3306/userdb?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Kylin@123}
+      PORT: 8080
+    ports:
+      # 左侧是服务器端口，改 80 即可用 http://IP 直接访问（无需备案）
+      - "8080:8080"
+
+volumes:
+  mysql-data:
