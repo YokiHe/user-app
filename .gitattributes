@@ -1,0 +1,4 @@
+# 统一换行符，避免 Windows 的 CRLF 导致 Docker 内脚本无法执行
+* text=auto eol=lf
+*.sh text eol=lf
+Dockerfile text eol=lf
