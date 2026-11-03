@@ -1,0 +1,13 @@
+# Render 蓝图：一个 Web Service，Docker 运行，免费档
+services:
+  - type: web
+    name: user-app
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DB_URL   # Aiven MySQL 连接串，部署时在 Render 控制台填写真实值
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
